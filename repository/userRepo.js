@@ -1,4 +1,4 @@
-const User = require('../models/User'); // MongoDB
+const User = require('../models/UserModel'); // MongoDB
 const { getDBClient } = require('../config/database');
 const dbType = process.env.DB_TYPE;
 

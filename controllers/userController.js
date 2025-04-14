@@ -1,5 +1,5 @@
-const User = require('../models/userModel');
-const Menu = require('../models/menuModel'); 
+const User = require('../models/UserModel');
+const Menu = require('../models/MenuModel'); 
 
 // Create User
 exports.createUser = async (req, res) => {
