@@ -21,4 +21,5 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-module.exports = mongoose.model('User', userSchema);
+// Cegah error "OverwriteModelError"
+module.exports = mongoose.models.User || mongoose.model('User', userSchema);

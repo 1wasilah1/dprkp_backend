@@ -6,15 +6,24 @@ exports.createUser = async (req, res) => {
   try {
     const { username, password, role, authmenu } = req.body;
 
+    // Validasi authmenu: jika kosong, set sebagai array kosong atau nilai default
+    if (!Array.isArray(authmenu) || authmenu.some(item => !mongoose.Types.ObjectId.isValid(item))) {
+      return res.status(400).json({ msg: 'Authmenu berisi nilai yang tidak valid' });
+    }
+
+    // Jika authmenu kosong, set sebagai array kosong
+    const finalAuthMenu = authmenu.length === 0 ? [] : authmenu;
+
     const existing = await User.findOne({ username });
     if (existing) return res.status(400).json({ message: 'Username already exists' });
 
-    const user = await User.create({ username, password, role, authmenu });
+    const user = await User.create({ username, password, role, authmenu: finalAuthMenu });
     res.status(201).json(user);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
+
 
 // Get All Users
 exports.getAllUsers = async (req, res) => {
@@ -98,9 +107,16 @@ exports.updateUser = async (req, res) => {
 // Delete User
 exports.deleteUser = async (req, res) => {
   try {
-    await User.findByIdAndDelete(req.params.id);
-    res.status(200).json({ message: 'User deleted' });
+    const user = await User.findByIdAndDelete(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User tidak ditemukan' });
+    }
+    res.status(200).json({ message: 'User berhasil dihapus' });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
+
+
+
+
