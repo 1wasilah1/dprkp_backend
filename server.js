@@ -7,6 +7,7 @@ const menuRoutes = require('./routes/menuRoutes');
 const taxItemRoutes = require("./routes/taxItemRoutes");
 const authRoutes = require('./routes/authRoutes');
 const { authMiddleware } = require('./middleware/auth');
+const contentRoutes = require('./routes/contentRoutes');
 
 db.connectDB(); // 👈 panggil fungsi koneksi
 
@@ -15,8 +16,9 @@ app.use('/api/users', userRoutes);
 app.use('/api/menu', menuRoutes);
 app.use("/api/tax", taxItemRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/content', contentRoutes);
 
-
+app.use('/uploads', express.static('uploads'));
 app.get('/api/protected', authMiddleware, (req, res) => {
     res.json({ msg: 'Selamat datang pengguna terverifikasi!' });
 });
