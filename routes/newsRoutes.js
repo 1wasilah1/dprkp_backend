@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { getNewsData } = require('../controllers/newsController');
+const {
+    getBeritaTerkini,
+    getBeritaBUMD
+  } = require('../controllers/newsController');
 
-// Rute untuk mendapatkan data berita berdasarkan kategori
-router.get('/', getNewsData);
-
+router.get('/terkini', getBeritaTerkini);
+router.get('/bumd', getBeritaBUMD);
 module.exports = router;
