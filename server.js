@@ -8,6 +8,7 @@ const taxItemRoutes = require("./routes/taxItemRoutes");
 const authRoutes = require('./routes/authRoutes');
 const { authMiddleware } = require('./middleware/auth');
 const contentRoutes = require('./routes/contentRoutes');
+const newsRoutes = require('./routes/newsRoutes');
 
 db.connectDB(); // 👈 panggil fungsi koneksi
 
@@ -19,9 +20,15 @@ app.use('/api/auth', authRoutes);
 app.use('/api/content', contentRoutes);
 
 app.use('/uploads', express.static('uploads'));
+
+// API untuk berita
+app.use('/api/news', newsRoutes);  // Route untuk menarik berita
+
 app.get('/api/protected', authMiddleware, (req, res) => {
     res.json({ msg: 'Selamat datang pengguna terverifikasi!' });
 });
+
+
 
   
 const PORT = process.env.PORT || 5000;
