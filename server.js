@@ -12,6 +12,7 @@ const newsRoutes = require('./routes/newsRoutes');
 const strukturOrganisasiRoutes = require('./routes/strukturOrganisasiRoutes');
 const sopPPIDRoutes = require('./routes/sop-ppid.routes');
 const path = require('path');
+const visiMisiRoutes = require("./routes/visiMisiRoutes");
 
 db.connectDB(); // 👈 panggil fungsi koneksi
 
@@ -39,7 +40,8 @@ app.get('/api/protected', authMiddleware, (req, res) => {
     res.json({ msg: 'Selamat datang pengguna terverifikasi!' });
 });
 
-
+//Visi Misi
+app.use('/api/visi-misi', visiMisiRoutes);
 
   
 const PORT = process.env.PORT || 5000;
