@@ -44,5 +44,5 @@ app.get('/api/protected', authMiddleware, (req, res) => {
 app.use('/api/visi-misi', visiMisiRoutes);
 
   
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5100;
 app.listen(PORT, () => console.log(`Server running on 127.0.0.1:${PORT}`));

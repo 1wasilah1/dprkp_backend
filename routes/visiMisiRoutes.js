@@ -1,6 +1,7 @@
 const express = require("express");
 const {
   getVisiMisi,
+  getVisiMisiByType,
   createVisiMisi,
   updateVisiMisi
 } = require("../controllers/visiMisiController");
@@ -8,12 +9,15 @@ const {
 const router = express.Router();
 
 // Route untuk mengambil data visi misi
-router.get("/visi-misi", getVisiMisi);
+router.get("/", getVisiMisi);
+
+// Route untuk mengambil data visi misi
+router.get("/:id", getVisiMisiByType);
 
 // Route untuk menambahkan visi misi baru
-router.post("/visi-misi", createVisiMisi);
+router.post("/", createVisiMisi);
 
 // Route untuk memperbarui visi misi
-router.put("/visi-misi", updateVisiMisi);
+router.put("/", updateVisiMisi);
 
 module.exports = router;
