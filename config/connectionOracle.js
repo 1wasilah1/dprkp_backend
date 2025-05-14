@@ -27,4 +27,17 @@ async function getConnection() {
   }
 }
 
-module.exports = { initialize, getConnection };
+async function query(sql, binds = [], options = {}) {
+  let connection;
+  options.outFormat = oracledb.OUT_FORMAT_OBJECT;
+
+  try {
+    connection = await oracledb.getConnection();
+    const result = await connection.execute(sql, binds, options);
+    return result;
+  } finally {
+    if (connection) await connection.close();
+  }
+}
+
+module.exports = { initialize, getConnection, query };

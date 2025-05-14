@@ -1,4 +1,5 @@
 const oracledb = require("oracledb");
+const db = require("../config/connectionOracle");
 
 const dbConfig = {
   user: process.env.ORACLE_USER,
@@ -7,7 +8,7 @@ const dbConfig = {
 };
 
 const rowsLabelToLowercase = (rows) => {
-  return rows.map(row => {
+  return rows.map((row) => {
     const newRow = {};
     for (let key in row) {
       newRow[key.toLowerCase()] = row[key];
@@ -42,6 +43,8 @@ async function getAllVisiMisi() {
 
 async function getVisiMisiByType(type) {
   try {
+    //type 1 untuk profile page
+    //type 2 untuk ppid page
     const connection = await oracledb.getConnection(dbConfig);
     oracledb.fetchAsString = [oracledb.CLOB];
     const result = await connection.execute(
@@ -66,25 +69,51 @@ async function getVisiMisiByType(type) {
 }
 
 async function createVisiMisi(data) {
-  const { visi, misi, visi_image, misi_image, type_visi_misi, visi_misi_banner } = data;
-  console.log("masuk sini createVisiMisi");
   const connection = await oracledb.getConnection(dbConfig);
-  const result = await connection.execute(
-    "INSERT INTO WEBSITE_VISI_MISI (visi, misi, visi_image, misi_image, type_visi_misi, visi_misi_banner) VALUES (:visi, :misi, :visi_image, :misi_image, :type_visi_misi, :visi_misi_banner)",
-    { visi, misi, visi_image, misi_image, type_visi_misi, visi_misi_banner },
-    { autoCommit: true }
-  );
-  console.log("result=>", result);
-  return result;
+  try {
+    const {
+      visi,
+      misi,
+      visi_image,
+      misi_image,
+      type_visi_misi,
+      visi_misi_banner,
+    } = data;
+    const result = await connection.execute(
+      "INSERT INTO WEBSITE_VISI_MISI (visi, misi, visi_image, misi_image, type_visi_misi, visi_misi_banner) VALUES (:visi, :misi, :visi_image, :misi_image, :type_visi_misi, :visi_misi_banner)",
+      { visi, misi, visi_image, misi_image, type_visi_misi, visi_misi_banner },
+      { autoCommit: true }
+    );
+    console.log("result=>", result);
+    return result;
+  } catch (err) {
+    console.error("Error create visi misi", err);
+    throw err;
+  }
 }
 
 async function updateVisiMisi(id, data) {
   try {
-    const { visi, misi, visi_image, misi_image, type_visi_misi, visi_misi_banner } = data;
+    const {
+      visi,
+      misi,
+      visi_image,
+      misi_image,
+      type_visi_misi,
+      visi_misi_banner,
+    } = data;
     const connection = await oracledb.getConnection(dbConfig);
     const result = await connection.execute(
       "UPDATE WEBSITE_VISI_MISI SET visi = :visi, misi = :misi, visi_image = :visi_image, misi_image = :misi_image, type_visi_misi = :type_visi_misi, visi_misi_banner = :visi_misi_banner WHERE id = :id",
-      { id, visi, misi, visi_image, misi_image, type_visi_misi, visi_misi_banner },
+      {
+        id,
+        visi,
+        misi,
+        visi_image,
+        misi_image,
+        type_visi_misi,
+        visi_misi_banner,
+      },
       { autoCommit: true }
     );
     return result.rowsAffected;
@@ -111,10 +140,27 @@ async function deleteVisiMisi(id) {
   }
 }
 
+async function create ({
+  visi,
+  misi,
+  visi_image,
+  misi_image,
+  type_visi_misi,
+  visi_misi_banner,
+}) {
+  await db.query(
+    `INSERT INTO WEBSITE_VISI_MISI (visi, misi, visi_image, misi_image, type_visi_misi, visi_misi_banner)
+       VALUES (:visi, :misi, :visi_image, :misi_image, :type_visi_misi, :visi_misi_banner)`,
+    { visi, misi, visi_image, misi_image, type_visi_misi, visi_misi_banner },
+    { autoCommit: true }
+  );
+}
+
 module.exports = {
   getAllVisiMisi,
   getVisiMisiByType,
   createVisiMisi,
   updateVisiMisi,
   deleteVisiMisi,
+  create
 };
